@@ -1,0 +1,76 @@
+.signup-form {
+    margin-top: 7vh;
+    width: 80vw;
+    margin-inline: auto;
+}
+
+.form-heading-text {
+    color: var(--theme-color);
+    text-align: center;
+}
+
+.form-heading-text>h2 {
+    font-size: var(--font-size);
+}
+
+.phone-number-group {
+    display: flex;
+    gap: 2vw;
+}
+
+.phone-number-group input {
+    flex: 1;
+    margin-top: 3vh;
+    border: 1px solid var(--theme-color);
+    border-radius: 5px;
+    height: 5vh;
+}
+
+#country-code {
+    width: 10vw;
+    margin-left: 2vw;
+}
+
+
+.f-input-field {
+    width: 100%;
+    margin-top: 3vh;
+    border: 1px solid var(--theme-color);
+    border-radius: 5px;
+    height: 5vh;
+}
+
+.eye-b {
+    position: absolute;
+    margin-top: 36px;
+    margin-left: -30px;
+}
+
+.fs-checkbox-container {
+    margin-top: 2vh;
+    display: flex;
+    text-align: left;
+    gap: 10px;
+}
+
+.fs-checkbox-container input {
+    height: 20px;
+    align-self: center;
+    flex-basis: fit-content;
+}
+
+.next-button button {
+    width: 100%;
+    background-color: var(--theme-color);
+    color: white;
+    border-radius: 5px;
+    height: 5vh;
+    margin-top: 3vh;
+}
+
+.login-now-text {
+    color: var(--theme-color);
+    font-weight: var(--font-weight-900);
+    margin-top: 3vh;
+    text-align: center;
+}

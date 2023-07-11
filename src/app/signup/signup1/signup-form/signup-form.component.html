@@ -1,0 +1,19 @@
+<form [formGroup]="phoneNumberInputGroup">
+    <div class="signup-form">
+        <div class="form-heading-text">
+            <h2>Sign Up</h2>
+            <span>Please enter your details below to create account.</span>
+        </div>
+        <div class="phone-number-group">
+            <input type="text" id="country-code" placeholder="+60" required formControlName="countryCode">
+            <input type="text" id="ph-num" placeholder="Enter Phone Number (1XXXXXXXXX)" required formControlName="phoneNumber">
+        </div>
+        <div class="g-recaptcha" data-sitekey="6LcKps8mAAAAALuMqHWQp7RI_Lv-eWLUaJpeceeW"></div>
+        <div class="next-button">
+            <button type="button" (click)="onClickNext()">Next</button>
+        </div>
+        <div>
+            <p class="login-now-text">ALREADY A MEMBER? <a (click)="onClickLoginNow()"><u>LOGIN NOW</u> </a></p>
+        </div>
+    </div>
+</form>

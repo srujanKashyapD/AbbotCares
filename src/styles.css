@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --theme-color: #002A3A;
+    --blue-color: #1348B2;
+    --bronze-color: #895E1A;
+    --border-grey: #888B8D;
+    --light-grey: #D9D9D9;
+    --font-family: 'Roboto';
+    --font-weight-900: 900;
+    --font-weight-700: 700;
+    --font-weight-400: 400;
+    --font-size: 24px;
+}
+
+body {
+    font-family: var(--font-family);
+}

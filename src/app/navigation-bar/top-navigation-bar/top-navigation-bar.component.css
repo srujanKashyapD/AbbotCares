@@ -1,0 +1,38 @@
+
+.nav-container {
+    background: var(--theme-color);
+    display: grid;
+    grid-template-columns: 2fr 1fr 0.3fr;
+    grid-template-rows: 3rem;
+}
+
+.nav-brand {
+    align-self: center;
+    margin-left: 5%;
+    grid-column: 1 / 2;
+}
+
+.nav-brand a {
+    display: flex;
+}
+
+.nav-brand-logo {
+    grid-column: 2 / 3;
+}
+
+.ham-icon {
+    grid-column: 3 / 4;
+    justify-self: end;
+    margin-right: 10%;
+    align-self: center;
+}
+
+.nav-brand>a>h1 {
+    font-family: var(--font-family);
+    color: white;
+    font-size: medium;
+    font-weight: bold;
+    align-self: flex-end;
+    text-decoration: none;
+    margin-left: 2%;
+}
