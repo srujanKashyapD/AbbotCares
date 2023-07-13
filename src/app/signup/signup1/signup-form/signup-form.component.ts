@@ -20,6 +20,7 @@ export class SignupFormComponent implements OnInit {
   }
 
   onClickNext(): void {
+    console.log(this.phoneNumberInputGroup);
     this.router.navigate(['registration']);
   }
 

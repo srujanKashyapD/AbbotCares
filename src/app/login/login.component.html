@@ -1,7 +1,6 @@
 <app-carousel></app-carousel>
 
-
-<form [formGroup]="loginDetails">
+<form [formGroup]="loginDetails" (ngSubmit)="onClickNext()">
     <div class="signup-form">
         <div class="form-heading-text">
             <h2>Login </h2>
@@ -33,7 +32,7 @@
 
         <div class="g-recaptcha" data-sitekey="6LcKps8mAAAAALuMqHWQp7RI_Lv-eWLUaJpeceeW"></div>
         <div class="next-button">
-            <button type="button" (click)="onClickNext()">Log In</button>
+            <button type="submit">Log In</button>
         </div>
         <div class="form-heading-text mt-2">
             <a (click)="onClickForgotPassword()"><u>Forgot your password</u></a>
