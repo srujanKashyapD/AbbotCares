@@ -27,7 +27,7 @@
 }
 
 #country-code {
-    width: 10vw;
+    max-width: 12vw;
 }
 
 
