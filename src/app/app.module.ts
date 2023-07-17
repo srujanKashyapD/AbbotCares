@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { CommonModulesModule } from './common-modules/common-modules.module';
 import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
+import { HomeModule } from './home/home.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ForgotPasswordModule } from './forgot-password/forgot-password.module';
     SignupModule,
     ForgotPasswordModule,    
     CommonModulesModule,
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

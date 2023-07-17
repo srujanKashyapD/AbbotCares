@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   onClickForgotPassword(): void {
-    this.router.navigate(['']);
+    this.router.navigate(['forgot-password']);
   }
 
   onClickSignUpNow(): void {

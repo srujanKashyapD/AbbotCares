@@ -1,0 +1,23 @@
+/* Section Heading */
+.section-heading h2 {
+    font-weight: var(--font-weight-700);
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+/* Scrolling Cards */
+.scrolling-wrapper {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+
+    .scrolling-card {
+        flex: 0 0 auto;
+    }
+}
+
+.scrolling-card img {
+    height: 182px !important;
+}

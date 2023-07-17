@@ -1,0 +1,7 @@
+.card-options-container {
+    display: flex;
+    gap: 2vw;
+    width: fit-content;
+    margin-inline: auto;
+    margin-top: -5vh;
+}

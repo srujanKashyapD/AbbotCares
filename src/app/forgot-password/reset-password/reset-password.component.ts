@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-reset-password',
@@ -39,7 +40,9 @@ export class ResetPasswordComponent implements OnInit {
 
   otp: string;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  showModal = false;
+
+  constructor(private formBuilder: FormBuilder, private router: Router, private modalService: NgbModal) { }
 
   ngOnInit() {
 
@@ -65,14 +68,19 @@ export class ResetPasswordComponent implements OnInit {
       this.pageTitle = 'SMS Verification';
       this.step++
     }
-
   }
 
-  submit(): void {
+  submit(modal): void {
+
+    
 
     if (this.step == 2) {
       this.otp_step = true;
       // if (this.otpDetails.invalid) { return }
+      this.showModal = true;
+
+      this.modalService.open(modal);
+      console.log(this.showModal);
       console.log(this.otpDetails);
     }
   }
@@ -83,7 +91,13 @@ export class ResetPasswordComponent implements OnInit {
 
   onOtpChange(otp) {
     this.otp = otp;
-    console.log(otp);
+    // console.log(otp);
+  }
+
+  onClickBackToLogin(modal: NgbActiveModal): void {
+    console.log(modal);
+    modal.close('back to login');
+    this.router.navigate(['login'])
   }
 
 }

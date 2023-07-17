@@ -1,0 +1,16 @@
+/* Section Heading */
+.section-heading h2 {
+    font-weight: var(--font-weight-700);
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+/* Grid Cards */
+.grid-cards {
+    margin-inline: auto;
+    width: 80vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    margin-top: 1rem;
+}

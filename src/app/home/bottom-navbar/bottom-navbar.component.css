@@ -1,0 +1,64 @@
+/* Bottom Nav Bar */
+
+.bottom-nav-bar {
+
+    display: flex;
+    padding: 0;
+    margin: 0;
+    gap: 1rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    background: radial-gradient(circle at 50% 0%, transparent 15%, white 27%);
+}
+
+.bottom-nav-bar-item {
+    flex: 1;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    align-items: center;
+}
+
+.bottom-nav-bar-item img {
+    justify-self: center;
+}
+
+.bottom-nav-bar p {
+    font-size: x-small;
+    text-align: center;
+    font-weight: var(--font-weight-700);
+}
+
+.qr-code-circle {
+    height: 3rem;
+    width: 7rem;
+    border-radius: 0 0 4rem 4rem;
+    background-color: rgba(1, 1, 1, 0.1);
+    -webkit-box-shadow: inset 0px -5px 14px 0px var(--border-grey);
+    box-shadow: inset 0px -5px 14px 0px var(--border-grey);
+    position: relative;
+    bottom: 0rem;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 3;
+}
+
+.qr-code-holder {
+    height: 6rem;
+    width: 6rem;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    bottom: 3.5rem;
+    left: 0.5rem;
+    display: flex;
+}
+
+.qr-code-holder img {
+    align-self: center;
+    margin-inline: auto;
+}

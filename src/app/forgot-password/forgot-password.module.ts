@@ -5,6 +5,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -13,7 +14,8 @@ import { NgOtpInputModule } from 'ng-otp-input';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgOtpInputModule
+    NgOtpInputModule,
+    NgbModule,
   ],
   exports: [
     ForgotPasswordComponent,

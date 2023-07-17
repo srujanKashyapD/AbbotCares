@@ -1,0 +1,45 @@
+.carousel-indicators [data-bs-target] {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+}
+
+.c-indicator {
+    bottom: 5rem;
+}
+
+.carousel-caption {
+    border-radius: 10%;
+    background: linear-gradient(354.77deg, rgba(0, 0, 0, 0.6) 33.84%, rgba(120, 189, 231, 0) 90.71%);
+    left: 0;
+    right: 0;
+    bottom: 0.3em;
+}
+
+/* Whats new carousel */
+.whats-new-carousel img {
+    height: 141px;
+    width: 157px !important;
+}
+
+.whats-new-carousel-container {
+    margin-top: 2rem;
+    justify-items: center;
+    margin-inline: auto;
+}
+
+.whats-new-c-indicator {
+    bottom: -3rem
+}
+
+.whats-new-c-indicator [data-bs-target] {
+    --carousel-color: #1348B2;
+    background-color: var(--carousel-color);
+}
+
+/* Section Heading */
+.section-heading h2 {
+    font-weight: var(--font-weight-700);
+    margin-left: 2rem;
+    margin-top: 1rem;
+}

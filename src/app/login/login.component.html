@@ -9,12 +9,12 @@
         </div>
         <div class="phone-number-group" formGroupName="phoneDetails">
             <input type="text" id="country-code" placeholder="+60" formControlName="countryCode">
-            <input type="text" id="ph-num" placeholder="Enter Phone Number (1XXXXXXXXX)" formControlName="phoneNumber">
+            <input type="number" id="ph-num" placeholder="Enter Phone Number (1XXXXXXXXX)" formControlName="phoneNumber">
         </div>
 
         <div class="f-input-field-container">
             <!-- toggling input type from 'password' to 'text' using ternary operator -->
-            <input type="{{showPassword ? 'text' : 'password' }}" class="f-input-field"
+            <input type="{{ showPassword ? 'text' : 'password' }}" class="f-input-field"
                 placeholder="Enter Your Password" formControlName="password">
 
             <a (click)="togglePassword()" class="eye-b">
@@ -24,7 +24,7 @@
 
         <div class="fs-checkbox-container">
             <input type="checkbox" id="k-logged-in" name="logged-in" value="logged-in"
-            formControlName="keepLoggedInState">
+                formControlName="keepLoggedInState">
             <label class="fs-checkbox-text-label" for="k-logged-in">
                 Keep me logged in
             </label>

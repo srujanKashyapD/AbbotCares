@@ -5,13 +5,16 @@ import { MultiformSignupComponent } from './signup/multiform-signup/multiform-si
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './forgot-password/reset-password/reset-password.component';
+import { HomepageComponent } from './home/homepage/homepage.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'signup', component: Signup1Component },
   { path: 'registration', component: MultiformSignupComponent },
   { path: 'login', component: LoginComponent },
-  {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: 'reset-password', component: ResetPasswordComponent},
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'home', component: HomepageComponent }
 ];
 
 @NgModule({
