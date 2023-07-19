@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Signup1Component } from '../signup1/signup1.component';
+
+import { PhoneGroup, PhoneNumberService } from '../../core/services/phone-number.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multiform-signup',
   templateUrl: './multiform-signup.component.html',
   styleUrls: ['./multiform-signup.component.css']
 })
-export class MultiformSignupComponent implements OnInit {
+export class MultiformSignupComponent implements OnInit, OnDestroy {
 
   otpConfig = {
     allowNumbersOnly: true,
@@ -41,7 +43,19 @@ export class MultiformSignupComponent implements OnInit {
 
   otp: FormControl;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) { }
+  countryCode: string = '+91';
+  phoneNumber: string = '999999';
+
+  phoneNumSubscription: Subscription;
+
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private phoneService: PhoneNumberService
+  ) { }
+
+
+
 
   ngOnInit() {
 
@@ -69,6 +83,21 @@ export class MultiformSignupComponent implements OnInit {
     });
 
     this.otp = new FormControl('');
+
+    this.phoneNumSubscription = this.phoneService.phoneNumberGroup.subscribe((phoneGroup: PhoneGroup) => {
+      this.countryCode = phoneGroup.countryCode;
+      this.phoneNumber = phoneGroup.phoneNumber;
+      console.log(this.countryCode + " and " + this.phoneNumber);
+    }, 
+    (error) => {
+      console.log("an error occured");
+    }
+    );
+  }
+
+
+  ngOnDestroy(): void {
+    this.phoneNumSubscription.unsubscribe();
   }
 
   get personal() { return this.passwordDetails.controls; }
@@ -108,7 +137,7 @@ export class MultiformSignupComponent implements OnInit {
 
   }
 
-  submit():void {
+  submit(): void {
 
     if (this.step == 3) {
       this.otp_step = true;

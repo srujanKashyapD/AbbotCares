@@ -6,6 +6,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { PhoneNumberService } from '../core/services/phone-number.service';
 
 
 
@@ -17,10 +18,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgOtpInputModule,
     NgbModule,
   ],
-  exports: [
-    ForgotPasswordComponent,
-    ResetPasswordComponent
-  ]
+  exports: [ForgotPasswordComponent, ResetPasswordComponent]
 })
 export class ForgotPasswordModule {
   

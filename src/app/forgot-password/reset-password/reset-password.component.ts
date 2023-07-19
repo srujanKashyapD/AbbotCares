@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+import { PhoneGroup, PhoneNumberService } from 'src/app/core/services/phone-number.service';
 
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   otpConfig = {
     allowNumbersOnly: true,
@@ -42,7 +44,17 @@ export class ResetPasswordComponent implements OnInit {
 
   showModal = false;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private modalService: NgbModal) { }
+  countryCode: string;
+  phoneNumber: string;
+
+  phoneNumSubscription: Subscription;
+
+  constructor(
+    private formBuilder: FormBuilder, 
+    private router: Router, 
+    private modalService: NgbModal,
+    private phoneService: PhoneNumberService
+    ) { }
 
   ngOnInit() {
 
@@ -54,6 +66,15 @@ export class ResetPasswordComponent implements OnInit {
     this.otpDetails = this.formBuilder.group({
       otp: new FormControl(null)
     });
+
+    this.phoneNumSubscription = this.phoneService.phoneNumberGroup.subscribe((phoneGroup: PhoneGroup) => {
+      this.countryCode = phoneGroup.countryCode;
+      this.phoneNumber = phoneGroup.phoneNumber;
+    });
+  }
+
+  ngOnDestroy(): void {
+      this.phoneNumSubscription.unsubscribe();
   }
 
   get password() { return this.passwordDetails.controls; }
@@ -86,7 +107,7 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   onChangeNumber(): void {
-    this.router.navigate(['signup']);
+    this.router.navigate(['forgot-password']);
   }
 
   onOtpChange(otp) {

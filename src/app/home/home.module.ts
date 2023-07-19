@@ -10,11 +10,21 @@ import { CarepointOptionsComponent } from './carepoint-options/carepoint-options
 import { CarepointRoundOptionsComponent } from './carepoint-round-options/carepoint-round-options.component';
 
 
-
 @NgModule({
-  declarations: [CarouselComponent, CarepointCardComponent, RedemptionCatalogueComponent, CustomerReviewsComponent, HomepageComponent, BottomNavbarComponent, CarepointOptionsComponent, CarepointRoundOptionsComponent],
+  declarations: [
+    CarouselComponent,
+    CarepointCardComponent,
+    RedemptionCatalogueComponent,
+    CustomerReviewsComponent,
+    HomepageComponent,
+    BottomNavbarComponent,
+    CarepointOptionsComponent,
+    CarepointRoundOptionsComponent
+  ],
   imports: [
     CommonModule
-  ]
+  ],
+  exports: [HomepageComponent]
+
 })
 export class HomeModule { }

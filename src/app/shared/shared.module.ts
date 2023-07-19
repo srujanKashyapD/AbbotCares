@@ -13,4 +13,4 @@ import { CarouselComponent } from './carousel/carousel.component';
     CarouselComponent,
   ]
 })
-export class CommonModulesModule { }
+export class SharedModule { }
