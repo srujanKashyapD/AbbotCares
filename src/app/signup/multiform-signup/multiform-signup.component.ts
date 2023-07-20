@@ -88,10 +88,10 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
       this.countryCode = phoneGroup.countryCode;
       this.phoneNumber = phoneGroup.phoneNumber;
       console.log(this.countryCode + " and " + this.phoneNumber);
-    }, 
-    (error) => {
-      console.log("an error occured");
-    }
+    },
+      (error) => {
+        console.log("an error occured");
+      }
     );
   }
 
@@ -110,6 +110,7 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
     if (this.step == 1) {
       this.password_step = true;
+      if (this.passwordDetails.value.password !== this.passwordDetails.value.confirmPassword) { return; }
       if (this.passwordDetails.invalid) { return }
       this.pageTitle = 'Registration';
       this.step++

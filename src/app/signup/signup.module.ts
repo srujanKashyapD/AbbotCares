@@ -6,7 +6,6 @@ import { SignupFormComponent } from './signup1/signup-form/signup-form.component
 import { MultiformSignupComponent } from './multiform-signup/multiform-signup.component';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { SharedModule } from '../shared/shared.module';
-import { PhoneNumberService } from '../core/services/phone-number.service';
 
 @NgModule({
   declarations: [Signup1Component, SignupFormComponent, MultiformSignupComponent],

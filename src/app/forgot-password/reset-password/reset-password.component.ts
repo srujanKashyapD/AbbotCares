@@ -50,11 +50,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   phoneNumSubscription: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder, 
-    private router: Router, 
+    private formBuilder: FormBuilder,
+    private router: Router,
     private modalService: NgbModal,
     private phoneService: PhoneNumberService
-    ) { }
+  ) { }
 
   ngOnInit() {
 
@@ -74,7 +74,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      this.phoneNumSubscription.unsubscribe();
+    this.phoneNumSubscription.unsubscribe();
   }
 
   get password() { return this.passwordDetails.controls; }
@@ -85,6 +85,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
     if (this.step == 1) {
       this.password_step = true;
+      if (this.passwordDetails.value.password !== this.passwordDetails.value.confirmPassword) { return; }
       if (this.passwordDetails.invalid) { return }
       this.pageTitle = 'SMS Verification';
       this.step++
@@ -93,7 +94,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   submit(modal): void {
 
-    
+
 
     if (this.step == 2) {
       this.otp_step = true;
