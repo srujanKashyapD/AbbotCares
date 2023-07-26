@@ -5,8 +5,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { PhoneNumberService } from '../core/services/phone-number.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
+import { PhoneAuthGuard } from '../core/auth/phone-auth-guard/phone-auth.guard';
 
 
 
@@ -14,12 +15,15 @@ import { PhoneNumberService } from '../core/services/phone-number.service';
   declarations: [ForgotPasswordComponent, ResetPasswordComponent],
   imports: [
     CommonModule,
+    RouterModule.forChild([
+      { path: '', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent, canActivate: [PhoneAuthGuard] }
+    ]),
     ReactiveFormsModule,
     NgOtpInputModule,
     NgbModule,
   ],
-  exports: [ForgotPasswordComponent, ResetPasswordComponent]
 })
 export class ForgotPasswordModule {
-  
- }
+
+}

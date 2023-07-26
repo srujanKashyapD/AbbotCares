@@ -32,7 +32,7 @@ export class ForgotPasswordComponent implements OnInit {
     const cCode: string = this.forgotPassForm.value.phoneDetails.countryCode;
     const phNum: string = this.forgotPassForm.value.phoneDetails.phoneNumber;
     this.phoneService.phoneNumberGroup.next({countryCode: cCode, phoneNumber: phNum});
-    this.router.navigate(['reset-password']);
+    this.router.navigate(['forgot-password', 'reset-password']);
   }
 
   onClickCancel(): void {

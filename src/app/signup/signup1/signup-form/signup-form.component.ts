@@ -30,7 +30,7 @@ export class SignupFormComponent implements OnInit {
     const phNum: string = this.phoneNumberInputGroup.value.phoneNumber;
     this.phoneService.phoneNumberGroup.next({ countryCode: cCode, phoneNumber: phNum });
     console.log(cCode + " and " + phNum);
-    this.router.navigate(['registration']);
+    this.router.navigate(['signup','registration']);
   }
 
   onClickLoginNow(): void {

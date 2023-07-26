@@ -8,6 +8,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
 import { CarepointOptionsComponent } from './carepoint-options/carepoint-options.component';
 import { CarepointRoundOptionsComponent } from './carepoint-round-options/carepoint-round-options.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -22,9 +23,10 @@ import { CarepointRoundOptionsComponent } from './carepoint-round-options/carepo
     CarepointRoundOptionsComponent
   ],
   imports: [
-    CommonModule
-  ],
-  exports: [HomepageComponent]
-
+    CommonModule,
+    RouterModule.forChild([
+      { path: '', component: HomepageComponent }
+    ])
+  ]
 })
 export class HomeModule { }

@@ -1,17 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { PhoneGroup, PhoneNumberService } from '../../services/phone-number.service';
+import { Observable } from 'rxjs';
+import { PhoneNumberService } from '../../services/phone-number.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PhoneAuthGuard implements CanActivate, OnDestroy {
-  
-  phoneSubscription: Subscription;
+export class PhoneAuthGuard implements CanActivate {
 
   constructor(private router: Router, private phoneNumberService: PhoneNumberService) { }
-  
+
 
   canActivate(route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):
@@ -19,33 +17,20 @@ export class PhoneAuthGuard implements CanActivate, OnDestroy {
     Observable<boolean | UrlTree> |
     Promise<boolean | UrlTree> {
 
-    let isAuthenticated: boolean = false;
-    this.phoneSubscription = this.phoneNumberService.phoneNumberGroup
-      .subscribe((phoneGroup: PhoneGroup) => {
-        if (phoneGroup && phoneGroup.countryCode && phoneGroup.countryCode !== '' &&
-          phoneGroup.phoneNumber && phoneGroup.phoneNumber !== '') {
-          isAuthenticated = true;
-        }
-      },
-        (error) => {
-          console.error(error);
-        }
-      );
+    let isAuthenticated: boolean = this.phoneNumberService.isValidPhoneGroup();
+    
 
-    if (isAuthenticated)
+    if (isAuthenticated) {
       return isAuthenticated;
+    }
     else {
-      if (state.url === '/reset-password') {
+      if (state.url === '/forgot-password/reset-password') {
         return this.router.createUrlTree(['forgot-password']);
       }
-      else if (state.url === '/registration') {
+      else if (state.url === '/signup/registration') {
         return this.router.createUrlTree(['signup']);
       }
       return isAuthenticated;
     }
-  }
-
-  ngOnDestroy(): void {
-    this.phoneSubscription.unsubscribe();
   }
 }
