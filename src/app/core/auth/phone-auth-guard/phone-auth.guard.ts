@@ -12,13 +12,13 @@ export class PhoneAuthGuard implements CanActivate {
 
 
   canActivate(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot):
-    boolean | UrlTree |
-    Observable<boolean | UrlTree> |
-    Promise<boolean | UrlTree> {
+              state: RouterStateSnapshot):
+              boolean | UrlTree |
+              Observable<boolean | UrlTree> |
+              Promise<boolean | UrlTree> {
 
-    let isAuthenticated: boolean = this.phoneNumberService.isValidPhoneGroup();
-    
+    const isAuthenticated: boolean = this.phoneNumberService.isValidPhoneGroup();
+
 
     if (isAuthenticated) {
       return isAuthenticated;

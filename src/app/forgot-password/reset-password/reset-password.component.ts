@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { PhoneGroup, PhoneNumberService } from 'src/app/core/services/phone-number.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { PhoneGroup, PhoneNumberService } from 'src/app/core/services/phone-numb
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy {
+export class ResetPasswordComponent implements OnInit {
 
   otpConfig = {
     allowNumbersOnly: true,
@@ -19,11 +19,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     disableAutoFocus: false,
     placeholder: '',
     inputStyles: {
-      'height': '35px',
-      'width': '35px',
+      height: '35px',
+      width: '35px',
       'background-color': 'var(--light-grey)',
       'border-radius': '5px',
-      'border': 'none!important',
+      border: 'none!important',
     },
     containerStyles: {
     },
@@ -31,13 +31,13 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     containerClass: ''
   };
 
-  pageTitle: string = 'Reset Password';
+  pageTitle = 'Reset Password';
   passwordDetails!: FormGroup;
   registrationDetails!: FormGroup;
   otpDetails!: FormGroup;
-  password_step = false;
-  registration_step = false;
-  otp_step = false;
+  passwordStep = false;
+  registrationStep = false;
+  otpStep = false;
   step = 1;
 
   otp: string;
@@ -47,7 +47,6 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   countryCode: string;
   phoneNumber: string;
 
-  phoneNumSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,7 +55,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     private phoneService: PhoneNumberService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.passwordDetails = this.formBuilder.group({
       password: ['', Validators.required],
@@ -67,37 +66,31 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       otp: new FormControl(null)
     });
 
-    this.phoneNumSubscription = this.phoneService.phoneNumberGroup.subscribe((phoneGroup: PhoneGroup) => {
+    this.phoneService.phoneNumberGroup.pipe(take(1)).subscribe( (phoneGroup: PhoneGroup) => {
       this.countryCode = phoneGroup.countryCode;
       this.phoneNumber = phoneGroup.phoneNumber;
-    });
-  }
+    } ).unsubscribe();
 
-  ngOnDestroy(): void {
-    this.phoneNumSubscription.unsubscribe();
   }
 
   get password() { return this.passwordDetails.controls; }
 
   get otpDet() { return this.otpDetails.controls; }
 
-  next() {
+  next(): void {
 
-    if (this.step == 1) {
-      this.password_step = true;
+    if (this.step === 1) {
+      this.passwordStep = true;
       if (this.passwordDetails.value.password !== this.passwordDetails.value.confirmPassword) { return; }
-      if (this.passwordDetails.invalid) { return }
+      if (this.passwordDetails.invalid) { return; }
       this.pageTitle = 'SMS Verification';
-      this.step++
+      this.step++;
     }
   }
 
   submit(modal): void {
-
-
-
-    if (this.step == 2) {
-      this.otp_step = true;
+    if (this.step === 2) {
+      this.otpStep = true;
       // if (this.otpDetails.invalid) { return }
       this.showModal = true;
 
@@ -111,7 +104,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this.router.navigate(['forgot-password']);
   }
 
-  onOtpChange(otp) {
+  onOtpChange(otp): void {
     this.otp = otp;
     // console.log(otp);
   }
@@ -119,7 +112,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   onClickBackToLogin(modal: NgbActiveModal): void {
     console.log(modal);
     modal.close('back to login');
-    this.router.navigate(['login'])
+    this.router.navigate(['login']);
   }
 
 }

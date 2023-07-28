@@ -16,14 +16,15 @@ export class LoginComponent implements OnInit {
     }),
     password: new FormControl('', Validators.required),
     keepLoggedInState: new FormControl(false, Validators.required)
-  })
+  });
 
+  showPassword = false;
+  
   constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
-  showPassword: boolean = false;
 
   public togglePassword(): void {
     this.showPassword = !this.showPassword;

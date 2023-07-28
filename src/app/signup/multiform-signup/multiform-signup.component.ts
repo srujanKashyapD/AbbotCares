@@ -1,16 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { take } from 'rxjs/operators';
+
 import { PhoneGroup, PhoneNumberService } from '../../core/services/phone-number.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multiform-signup',
   templateUrl: './multiform-signup.component.html',
   styleUrls: ['./multiform-signup.component.css']
 })
-export class MultiformSignupComponent implements OnInit, OnDestroy {
+export class MultiformSignupComponent implements OnInit {
 
   otpConfig = {
     allowNumbersOnly: true,
@@ -19,11 +20,11 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
     disableAutoFocus: false,
     placeholder: '',
     inputStyles: {
-      'height': '35px',
-      'width': '35px',
+      height: '35px',
+      width: '35px',
       'background-color': 'var(--light-grey)',
       'border-radius': '5px',
-      'border': 'none!important',
+      border: 'none!important',
     },
     containerStyles: {
     },
@@ -36,17 +37,16 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
   passwordDetails!: FormGroup;
   registrationDetails!: FormGroup;
   otpDetails!: FormGroup;
-  password_step = false;
-  registration_step = false;
-  otp_step = false;
+  passwordStep = false;
+  registrationStep = false;
+  otpStep = false;
   step = 1;
 
   otp: FormControl;
 
-  countryCode: string = '+91';
-  phoneNumber: string = '999999';
+  countryCode: string;
+  phoneNumber: string;
 
-  phoneNumSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -57,7 +57,7 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
 
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.passwordDetails = this.formBuilder.group({
       password: ['', Validators.required],
@@ -84,20 +84,10 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
     this.otp = new FormControl('');
 
-    this.phoneNumSubscription = this.phoneService.phoneNumberGroup.subscribe((phoneGroup: PhoneGroup) => {
+    this.phoneService.phoneNumberGroup.pipe(take(1)).subscribe( (phoneGroup: PhoneGroup) => {
       this.countryCode = phoneGroup.countryCode;
       this.phoneNumber = phoneGroup.phoneNumber;
-      console.log(this.countryCode + " and " + this.phoneNumber);
-    },
-      (error) => {
-        console.log("an error occured");
-      }
-    );
-  }
-
-
-  ngOnDestroy(): void {
-    this.phoneNumSubscription.unsubscribe();
+    } ).unsubscribe();
   }
 
   get personal() { return this.passwordDetails.controls; }
@@ -106,19 +96,19 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
   get education() { return this.otpDetails.controls; }
 
-  next() {
+  next(): void {
 
-    if (this.step == 1) {
-      this.password_step = true;
+    if (this.step === 1) {
+      this.passwordStep = true;
       if (this.passwordDetails.value.password !== this.passwordDetails.value.confirmPassword) { return; }
-      if (this.passwordDetails.invalid) { return }
+      if (this.passwordDetails.invalid) { return; }
       this.pageTitle = 'Registration';
-      this.step++
+      this.step++;
     }
 
-    else if (this.step == 2) {
-      this.registration_step = true;
-      if (this.registrationDetails.invalid) { return }
+    else if (this.step === 2) {
+      this.registrationStep = true;
+      if (this.registrationDetails.invalid) { return; }
       this.pageTitle = 'SMS Verification';
       this.step++;
     }
@@ -126,24 +116,24 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
   }
 
-  previous() {
-    this.step--
+  previous(): void {
+    this.step--;
 
-    if (this.step == 1) {
-      this.registration_step = false;
+    if (this.step === 1) {
+      this.registrationStep = false;
     }
-    if (this.step == 2) {
-      this.otp_step = false;
+    if (this.step === 2) {
+      this.otpStep = false;
     }
 
   }
 
   submit(): void {
 
-    if (this.step == 3) {
-      this.otp_step = true;
+    if (this.step === 3) {
+      this.otpStep = true;
       // if (this.otpDetails.invalid) { return }
-      console.log(this.otp)
+      console.log(this.otp);
     }
   }
 
