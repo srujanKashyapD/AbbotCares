@@ -105,7 +105,6 @@ export class MultiformSignupComponent implements OnInit {
       this.pageTitle = 'Registration';
       this.step++;
     }
-
     else if (this.step === 2) {
       this.registrationStep = true;
       if (this.registrationDetails.invalid) { return; }

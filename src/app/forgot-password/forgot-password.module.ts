@@ -7,7 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
-import { PhoneAuthGuard } from '../core/auth/phone-auth-guard/phone-auth.guard';
+import { PhoneAuthGuard } from '../core/guards/phone-auth-guard/phone-auth.guard';
 
 
 

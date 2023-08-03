@@ -23,9 +23,9 @@ export class PhoneNumberService {
                 this.isPhoneValid = true;
             }
         },
-            (error) => {
-                console.error(error);
-            }
+        (error) => {
+            console.error(error);
+        }
         ).unsubscribe();
 
         return this.isPhoneValid;

@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { Signup1Component } from './signup1/signup1.component';
 import { NgModule } from '@angular/core';
-import { PhoneAuthGuard } from '../core/auth/phone-auth-guard/phone-auth.guard';
+import { PhoneAuthGuard } from '../core/guards/phone-auth-guard/phone-auth.guard';
 import { MultiformSignupComponent } from './multiform-signup/multiform-signup.component';
 
 const routes: Routes = [
