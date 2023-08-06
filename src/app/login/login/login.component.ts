@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ApiServiceService } from 'src/app/core/services/api-service.service';
+import { Customer } from 'src/app/shared/customer.model';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   loginDetails = new FormGroup({
     phoneDetails: new FormGroup({
@@ -19,8 +22,10 @@ export class LoginComponent implements OnInit {
   });
 
   showPassword = false;
-  
-  constructor(private router: Router) { }
+
+  private apiSubsciption: Subscription;
+
+  constructor(private router: Router, private apiService: ApiServiceService) { }
 
   ngOnInit(): void {
   }
@@ -32,8 +37,24 @@ export class LoginComponent implements OnInit {
 
 
   onClickNext(): void {
-    console.log(this.loginDetails);
+    // console.log(this.loginDetails);
+    const mobileNumber = (<string>this.loginDetails.value.phoneDetails.countryCode).replace('+', '') +
+                          this.loginDetails.value.phoneDetails.phoneNumber;
+    const password = this.loginDetails.value.password;
 
+    let customerDetails: Customer = {
+      mobileNumber: mobileNumber,
+      password: password,
+      cnfPassword: password
+    };
+    localStorage.setItem('mobile-number', mobileNumber);
+    this.apiService.generateSession(customerDetails);
+    
+    this.apiSubsciption = this.apiService.validatePassword(customerDetails).subscribe((isValid: boolean) => {
+      if(isValid) {
+        this.router.navigate(['home']);
+      }
+    });
   }
 
   onClickForgotPassword(): void {
@@ -42,6 +63,12 @@ export class LoginComponent implements OnInit {
 
   onClickSignUpNow(): void {
     this.router.navigate(['signup']);
+  }
+
+
+  ngOnDestroy(): void {
+    if(this.apiSubsciption)
+      this.apiSubsciption.unsubscribe();
   }
 
 }

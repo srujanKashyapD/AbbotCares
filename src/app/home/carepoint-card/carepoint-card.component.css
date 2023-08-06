@@ -42,3 +42,7 @@ progress[value] {
     width: 80%;
     height: 1rem;
 }
+
+.current-slab {
+    display: flex;
+}

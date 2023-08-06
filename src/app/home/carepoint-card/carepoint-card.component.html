@@ -1,18 +1,18 @@
 <div class="carepoint-card level-3">
     <div class="carepoint-card__content">
-        <h2>Welcome, Username!</h2>
-        <h1>101 CarePoints</h1>
+        <h2>Welcome, {{ customerData?.firstName }}!</h2>
+        <h1>{{ customerData?.loyaltyPoints }} CarePoints</h1>
         <div class="level-progress">
-            <div class="bronze-points">
-                <h2>BRONZE</h2>
+            <div class="current-slab">
+                <h2>{{ customerData?.currentSlab }}</h2>
                 <img src="assets/images/star.svg" alt="star" />
                 <img src="assets/images/right-arrow.svg" alt="right arrow">
             </div>
 
             <div class="progress">
-                <progress id="file" value="32" max="100"></progress>
+                <progress id="file" value="{{ customerData?.loyaltyPoints }}" max="{{ customerData?.totalPointsUntilNextSlab }}"></progress>
             </div>
-            <p>20 more CarePoints to reach Silver</p>
+            <p>{{ customerData?.pointsUntilNextSlab }} more CarePoints to reach Silver</p>
         </div>
     </div>
 </div>
