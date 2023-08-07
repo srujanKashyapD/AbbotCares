@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PhoneNumberService } from '../../../core/services/phone-number.service';
+import { ApiServiceService } from 'src/app/core/services/api-service.service';
+import { Customer } from 'src/app/shared/customer.model';
+import { Validate } from 'src/app/shared/validate.model';
 
 @Component({
   selector: 'app-signup-form',
@@ -15,7 +18,9 @@ export class SignupFormComponent implements OnInit {
     phoneNumber: new FormControl('', [Validators.required]),
   });
 
-  constructor(private router: Router, private phoneService: PhoneNumberService) { }
+  constructor(private router: Router, 
+    private phoneService: PhoneNumberService, 
+    private apiService: ApiServiceService) { }
 
   ngOnInit(): void {
   }
@@ -29,7 +34,20 @@ export class SignupFormComponent implements OnInit {
     const phNum: string = this.phoneNumberInputGroup.value.phoneNumber;
     this.phoneService.phoneNumberGroup.next({ countryCode: cCode, phoneNumber: phNum });
 
-    this.router.navigate(['signup', 'registration']);
+    const customer: Customer = {
+      mobileNumber: (cCode + phNum).replace('+', ''),
+      password: '123456',
+      cnfPassword: '123456'
+    }
+    this.apiService.generateSession(customer)
+    .subscribe((data: Validate) => {
+      if(data.user.userRegisteredForPassword) {
+        this.router.navigate(['login']);
+      }
+      else {
+        this.router.navigate(['signup', 'registration']);
+      }
+    });
   }
 
   onClickLoginNow(): void {

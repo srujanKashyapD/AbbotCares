@@ -1,7 +1,8 @@
 export interface Validate {
     status: Status;
-    auth: Auth;
-    user: User;
+    auth?: Auth;
+    user?: User;
+    customers?: []; 
 }
 
 interface Status {

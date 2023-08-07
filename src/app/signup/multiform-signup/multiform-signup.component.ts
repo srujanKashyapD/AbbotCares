@@ -1,17 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 
 import { PhoneGroup, PhoneNumberService } from '../../core/services/phone-number.service';
+import { ApiServiceService } from 'src/app/core/services/api-service.service';
+import { Observable, Subscription } from 'rxjs';
+import { Validate } from 'src/app/shared/validate.model';
 
 @Component({
   selector: 'app-multiform-signup',
   templateUrl: './multiform-signup.component.html',
   styleUrls: ['./multiform-signup.component.css']
 })
-export class MultiformSignupComponent implements OnInit {
+export class MultiformSignupComponent implements OnInit, OnDestroy {
+
+  private subscriptionArray = [];
 
   otpConfig = {
     allowNumbersOnly: true,
@@ -36,7 +41,8 @@ export class MultiformSignupComponent implements OnInit {
 
   passwordDetails!: FormGroup;
   registrationDetails!: FormGroup;
-  otpDetails!: FormGroup;
+  otpDetails!: string;
+  otpFormControl: FormGroup;
   passwordStep = false;
   registrationStep = false;
   otpStep = false;
@@ -51,7 +57,8 @@ export class MultiformSignupComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private phoneService: PhoneNumberService
+    private phoneService: PhoneNumberService,
+    private apiService: ApiServiceService
   ) { }
 
 
@@ -73,28 +80,23 @@ export class MultiformSignupComponent implements OnInit {
       dataPrivacy: ['', Validators.required]
     });
 
-    this.otpDetails = this.formBuilder.group({
-      otp1: ['', Validators.required],
-      otp2: ['', Validators.required],
-      otp3: ['', Validators.required],
-      otp4: ['', Validators.required],
-      otp5: ['', Validators.required],
-      otp6: ['', Validators.required],
-    });
+    this.otpFormControl = this.formBuilder.group({
+      otpHolder: ['', Validators.required]
+    })
 
     this.otp = new FormControl('');
 
-    this.phoneService.phoneNumberGroup.pipe(take(1)).subscribe( (phoneGroup: PhoneGroup) => {
+    this.subscriptionArray.push(
+      this.phoneService.phoneNumberGroup.pipe(take(1)).subscribe( (phoneGroup: PhoneGroup) => {
       this.countryCode = phoneGroup.countryCode;
       this.phoneNumber = phoneGroup.phoneNumber;
-    } ).unsubscribe();
+      } )
+    );
   }
 
   get personal() { return this.passwordDetails.controls; }
 
   get address() { return this.registrationDetails.controls; }
-
-  get education() { return this.otpDetails.controls; }
 
   next(): void {
 
@@ -106,10 +108,18 @@ export class MultiformSignupComponent implements OnInit {
       this.step++;
     }
     else if (this.step === 2) {
-      this.registrationStep = true;
-      if (this.registrationDetails.invalid) { return; }
-      this.pageTitle = 'SMS Verification';
-      this.step++;
+      const phone = (this.countryCode + this.phoneNumber).replace('+', '');
+      this.subscriptionArray.push(
+        this.validateEmail(phone, this.registrationDetails.value.email)
+        .subscribe((isValid: boolean) => {
+          if(isValid) {
+            this.registrationStep = true;
+            if (this.registrationDetails.invalid) { return; }
+            this.pageTitle = 'SMS Verification';
+            this.step++;
+          }
+        })
+      );
     }
 
 
@@ -128,16 +138,83 @@ export class MultiformSignupComponent implements OnInit {
   }
 
   submit(): void {
-
     if (this.step === 3) {
       this.otpStep = true;
-      // if (this.otpDetails.invalid) { return }
+      let otpValue: string;
+      const phone = (this.countryCode + this.phoneNumber).replace('+', '');
+      localStorage.setItem('mobile-number', phone);
       console.log(this.otp);
+      this.apiService.validateOtp(phone, this.otpDetails)
+      .pipe(
+        tap((data: Validate) => {
+          if(data.status.success) {
+            this.apiService.getCustomerByPhone(phone).pipe()
+            .subscribe((cust: Validate) => {
+              if(cust.status.code !== 500){
+                this.router.navigate(['login']);
+              }
+            })
+            this.apiService.getCustomerByEmail(this.registrationDetails.value.email).pipe()
+            .subscribe((cust: Validate) => {
+              if(cust.status.code !== 500) {
+                this.router.navigate(['login']);
+              }
+            })
+          }
+      }), 
+      tap((data: Validate) => {
+        this.apiService.addNewCustomer(
+          { 
+            firstName: this.registrationDetails.value.firstName, 
+            lastName: this.registrationDetails.value.lastName
+          }, 
+          this.registrationDetails.value.email,
+          this.registrationDetails.value.brandPurchased
+          )
+          .pipe(map((data: Validate) => {
+            if(data.status.code === 200) {
+              this.router.navigate(['home']);
+            }
+          })).subscribe();
+      })).subscribe();
+
     }
   }
 
   onChangeNumber(): void {
     this.router.navigate(['signup']);
+  }
+
+  onOtpChange(otp: string) {
+    this.otpDetails = otp;
+    
+  }
+
+
+  private validateEmail(mobile: string, email: string): Observable<boolean> {
+    return this.apiService.validateEmail(mobile, email)
+    .pipe(map((response) => {
+      const customerObj = {
+        mobileNumber: mobile, 
+        password: this.passwordDetails.value.password,
+        cnfPassword: this.passwordDetails.value.confirmPassword
+      }
+      if(response.status === 200) {
+        this.apiService.generateSession(customerObj)
+        .subscribe(() => {
+          this.apiService.generateOtp(customerObj);
+        });
+        return true;
+      }
+      else {
+        return false;
+      }
+    }));
+
+  }
+
+  ngOnDestroy(): void {
+      this.subscriptionArray.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
 }

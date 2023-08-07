@@ -98,7 +98,7 @@
                     <input (click)="next()" type="button" name="next" class="next action-button" value="Register" />
                 </fieldset>
             </form>
-            <form [formGroup]="otpDetails" id="msform">
+            <form [formGroup]="otpFormControl" id="msform">
                 <fieldset *ngIf="step == 3">
                     <!-- <h2 class="fs-title">Educational Details</h2> -->
                     <div class="number-info">
@@ -109,7 +109,7 @@
                         <a (click)="onChangeNumber()"><u>Change number</u></a>
                     </div>
                     <div class="fs-otp-field">
-                        <ng-otp-input [formCtrl]="otp" [config]="otpConfig"></ng-otp-input>
+                        <ng-otp-input [formCtrl]="otp" (onInputChange)="onOtpChange($event)" [config]="otpConfig"></ng-otp-input>
                     </div>
                     <!-- <input (click)="previous()" type="button" name="previous" class="previous action-button-previous"
                         value="Previous" /> -->
