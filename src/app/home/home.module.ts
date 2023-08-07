@@ -9,6 +9,7 @@ import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
 import { CarepointOptionsComponent } from './carepoint-options/carepoint-options.component';
 import { CarepointRoundOptionsComponent } from './carepoint-round-options/carepoint-round-options.component';
 import { RouterModule } from '@angular/router';
+import { HomeAuthGuard } from '../core/guards/home-auth-guard/home-auth.guard';
 
 
 @NgModule({
@@ -25,7 +26,11 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: HomepageComponent }
+      {
+        path: '',
+        component: HomepageComponent,
+        canActivate: [HomeAuthGuard]
+      }
     ])
   ]
 })

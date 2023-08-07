@@ -21,7 +21,7 @@ export class ApiServiceService {
 
   }
 
-  generateSession(customerDetails: Customer): void {
+  generateSession(customerDetails: Customer): Observable<string> {
     const generateSessionBody = {
       brand: "ABBOTTALLDEMO",
       confirmPassword: customerDetails.cnfPassword,
@@ -32,12 +32,13 @@ export class ApiServiceService {
     }
     const generateSessionApiUrl = this.WRAPPER_API_URL + 'auth/v1/token/generate';
 
-    this.http.post<Validate>(generateSessionApiUrl, JSON.stringify(generateSessionBody)).pipe(
+    return this.http.post<Validate>(generateSessionApiUrl, JSON.stringify(generateSessionBody))
+    .pipe(
       map((data: Validate) => data.user.sessionId),
       tap((data: string) => {
         localStorage.setItem('session-id', data);
       })
-    ).subscribe();
+    );
   }
 
   validatePassword(customerDetails: Customer): Observable<boolean> {
@@ -70,8 +71,12 @@ export class ApiServiceService {
 
   }
 
-  getCustomerData(): Observable<CustomerDetail>  {
-    const getCustomerUrl = this.API_URL + 'mobile/v2/api/customer/get?format=json&mlp=true&gap_to_upgrade_for=0&slab_history=true&user_id=true';
+  getCustomerData(mlp: boolean, gapToUpgradeFor: {enabled: boolean, gapDays: number}, slabHistory: boolean): Observable<CustomerDetail>  {
+    let getCustomerUrl = this.API_URL + 'mobile/v2/api/customer/get?format=json&user_id=true';
+    getCustomerUrl = mlp ? getCustomerUrl + '&mlp=true' : getCustomerUrl;
+    getCustomerUrl = gapToUpgradeFor.enabled ? getCustomerUrl + '&gap_to_upgrade_for=' + gapToUpgradeFor.gapDays : getCustomerUrl;
+    getCustomerUrl = slabHistory ? getCustomerUrl + '&slab_history=true' : getCustomerUrl;
+
     return this.http.get<CustomerDetail>(getCustomerUrl, { headers: new HttpHeaders({
       "cap_authorization": localStorage.getItem('token'),
       "cap_brand": "ABBOTTALLDEMO",

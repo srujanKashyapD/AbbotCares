@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { Customer } from 'src/app/shared/customer.model';
 
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   showPassword = false;
 
-  private apiSubsciption: Subscription;
+  private apiSubsciption = [];
 
   constructor(private router: Router, private apiService: ApiServiceService) { }
 
@@ -48,13 +49,16 @@ export class LoginComponent implements OnInit, OnDestroy {
       cnfPassword: password
     };
     localStorage.setItem('mobile-number', mobileNumber);
-    this.apiService.generateSession(customerDetails);
+    this.apiSubsciption.push(this.apiService.generateSession(customerDetails)
+    .subscribe((sessionId) => {
+      this.apiSubsciption.push( this.apiService.validatePassword(customerDetails)
+      .subscribe((isValid: boolean) => {
+        if(isValid) {
+          this.router.navigate(['home']);
+        }
+      }) );
+    }));
     
-    this.apiSubsciption = this.apiService.validatePassword(customerDetails).subscribe((isValid: boolean) => {
-      if(isValid) {
-        this.router.navigate(['home']);
-      }
-    });
   }
 
   onClickForgotPassword(): void {
@@ -67,8 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    if(this.apiSubsciption)
-      this.apiSubsciption.unsubscribe();
+    this.apiSubsciption.forEach(subscription => subscription.unsubscribe());
   }
 
 }

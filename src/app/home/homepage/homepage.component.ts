@@ -20,7 +20,8 @@ export class HomepageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading = true;
-    this.apiService.getCustomerData().pipe(map((data: CustomerDetail) => {
+    this.apiService.getCustomerData(true, {enabled: true, gapDays: 0}, true)
+    .pipe(map((data: CustomerDetail) => {
       const customer = data.customers.customer[0];
       this.customerData = {
         userId: customer.user_id,
