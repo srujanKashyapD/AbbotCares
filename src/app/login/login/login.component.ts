@@ -2,16 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, concatMap } from 'rxjs/operators';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { Customer } from 'src/app/shared/customer.model';
+import { Validate } from 'src/app/shared/validate.model';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   loginDetails = new FormGroup({
     phoneDetails: new FormGroup({
@@ -23,8 +24,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   showPassword = false;
-
-  private apiSubsciption = [];
 
   constructor(private router: Router, private apiService: ApiServiceService) { }
 
@@ -38,9 +37,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   onClickNext(): void {
-    // console.log(this.loginDetails);
-    const mobileNumber = (<string>this.loginDetails.value.phoneDetails.countryCode).replace('+', '') +
-                          this.loginDetails.value.phoneDetails.phoneNumber;
+    const mobileNumber = (this.loginDetails.value.phoneDetails.countryCode).replace('+', '') +
+      this.loginDetails.value.phoneDetails.phoneNumber;
     const password = this.loginDetails.value.password;
 
     let customerDetails: Customer = {
@@ -49,16 +47,17 @@ export class LoginComponent implements OnInit, OnDestroy {
       cnfPassword: password
     };
     localStorage.setItem('mobile-number', mobileNumber);
-    this.apiSubsciption.push(this.apiService.generateSession(customerDetails)
-    .subscribe((sessionId) => {
-      this.apiSubsciption.push( this.apiService.validatePassword(customerDetails)
-      .subscribe((isValid: boolean) => {
-        if(isValid) {
+
+    this.apiService.generateSession(customerDetails)
+      .pipe(
+        concatMap(val => this.apiService.validatePassword(customerDetails))
+      ).subscribe((isValid: boolean) => {
+        if (isValid) {
           this.router.navigate(['home']);
         }
-      }) );
-    }));
-    
+      }
+    );
+
   }
 
   onClickForgotPassword(): void {
@@ -67,11 +66,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onClickSignUpNow(): void {
     this.router.navigate(['signup']);
-  }
-
-
-  ngOnDestroy(): void {
-    this.apiSubsciption.forEach(subscription => subscription.unsubscribe());
   }
 
 }

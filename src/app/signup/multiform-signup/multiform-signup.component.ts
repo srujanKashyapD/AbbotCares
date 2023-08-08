@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { map, take, tap } from 'rxjs/operators';
+import { concatMap, map, take, tap, filter, mergeMap, switchMap, catchError, takeUntil, takeWhile } from 'rxjs/operators';
 
 import { PhoneGroup, PhoneNumberService } from '../../core/services/phone-number.service';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { Validate } from 'src/app/shared/validate.model';
 
 @Component({
@@ -108,9 +108,10 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
       this.step++;
     }
     else if (this.step === 2) {
+
       const phone = (this.countryCode + this.phoneNumber).replace('+', '');
       this.subscriptionArray.push(
-        this.validateEmail(phone, this.registrationDetails.value.email)
+        this.validateEmail(phone, this.registrationDetails.value.email).pipe()
         .subscribe((isValid: boolean) => {
           if(isValid) {
             this.registrationStep = true;
@@ -140,43 +141,38 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
   submit(): void {
     if (this.step === 3) {
       this.otpStep = true;
-      let otpValue: string;
       const phone = (this.countryCode + this.phoneNumber).replace('+', '');
       localStorage.setItem('mobile-number', phone);
-      console.log(this.otp);
       this.apiService.validateOtp(phone, this.otpDetails)
-      .pipe(
-        tap((data: Validate) => {
-          if(data.status.success) {
-            this.apiService.getCustomerByPhone(phone).pipe()
-            .subscribe((cust: Validate) => {
-              if(cust.status.code !== 500){
-                this.router.navigate(['login']);
-              }
+        .pipe(filter((data: Validate) => data.status.success === true),
+        switchMap(val => this.apiService.getCustomerByPhone(phone)
+          .pipe(
+            tap((data)=> {
+              if(data.status.code !== 500)
+                this.router.navigate(['login'])
             })
-            this.apiService.getCustomerByEmail(this.registrationDetails.value.email).pipe()
-            .subscribe((cust: Validate) => {
-              if(cust.status.code !== 500) {
-                this.router.navigate(['login']);
-              }
+          )),
+        tap((data) => console.log(data)),
+        switchMap(val => this.apiService.getCustomerByEmail(this.registrationDetails.value.email)
+          .pipe(
+            tap((data)=> {
+              if(data.status.code !== 500)
+                this.router.navigate(['login'])
             })
-          }
-      }), 
-      tap((data: Validate) => {
-        this.apiService.addNewCustomer(
+          )),
+        switchMap( val => this.apiService.addNewCustomer(
           { 
             firstName: this.registrationDetails.value.firstName, 
             lastName: this.registrationDetails.value.lastName
           }, 
           this.registrationDetails.value.email,
           this.registrationDetails.value.brandPurchased
-          )
-          .pipe(map((data: Validate) => {
-            if(data.status.code === 200) {
-              this.router.navigate(['home']);
-            }
-          })).subscribe();
-      })).subscribe();
+        ).pipe(
+            filter((data: Validate) => data.status.code === 200),
+            tap(() => this.router.navigate(['home']))
+          )),
+          catchError(() => this.router.navigate(['signup']))
+        ).subscribe();
 
     }
   }
@@ -192,6 +188,37 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
 
   private validateEmail(mobile: string, email: string): Observable<boolean> {
+    // return this.apiService.validateEmail(mobile, email)
+    //   .pipe(
+    //     filter((response) => response.status === 200),
+    //     concatMap(val => this.apiService.generateSession())
+    //   );
+
+    // return this.apiService.validateEmail(mobile, email)
+    // .pipe(
+    //   switchMap((response) => {
+    //     const customerObj = {
+    //       mobileNumber: mobile, 
+    //       password: this.passwordDetails.value.password,
+    //       cnfPassword: this.passwordDetails.value.confirmPassword
+    //     }
+    //     if(response.status === 200) {
+    //       this.apiService.generateSession(customerObj)
+    //         .pipe(
+    //           switchMap((data) => this.apiService.generateOtp(customerObj)),
+
+    //         )
+
+    //     }
+    //     else {
+    //       return of(false);
+    //     }
+    // })
+    // );
+
+
+
+
     return this.apiService.validateEmail(mobile, email)
     .pipe(map((response) => {
       const customerObj = {
@@ -210,6 +237,8 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
         return false;
       }
     }));
+
+    
 
   }
 
