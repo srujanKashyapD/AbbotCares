@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { concatMap, map, take, tap, filter, mergeMap, switchMap, catchError, takeUntil, takeWhile } from 'rxjs/operators';
+import { concatMap, map, take, tap, filter, mergeMap, switchMap, catchError } from 'rxjs/operators';
 
 import { PhoneGroup, PhoneNumberService } from '../../core/services/phone-number.service';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
@@ -188,57 +188,22 @@ export class MultiformSignupComponent implements OnInit, OnDestroy {
 
 
   private validateEmail(mobile: string, email: string): Observable<boolean> {
-    // return this.apiService.validateEmail(mobile, email)
-    //   .pipe(
-    //     filter((response) => response.status === 200),
-    //     concatMap(val => this.apiService.generateSession())
-    //   );
-
-    // return this.apiService.validateEmail(mobile, email)
-    // .pipe(
-    //   switchMap((response) => {
-    //     const customerObj = {
-    //       mobileNumber: mobile, 
-    //       password: this.passwordDetails.value.password,
-    //       cnfPassword: this.passwordDetails.value.confirmPassword
-    //     }
-    //     if(response.status === 200) {
-    //       this.apiService.generateSession(customerObj)
-    //         .pipe(
-    //           switchMap((data) => this.apiService.generateOtp(customerObj)),
-
-    //         )
-
-    //     }
-    //     else {
-    //       return of(false);
-    //     }
-    // })
-    // );
-
-
-
+    const customerObj = {
+      mobileNumber: mobile, 
+      password: this.passwordDetails.value.password,
+      cnfPassword: this.passwordDetails.value.confirmPassword
+    }
 
     return this.apiService.validateEmail(mobile, email)
-    .pipe(map((response) => {
-      const customerObj = {
-        mobileNumber: mobile, 
-        password: this.passwordDetails.value.password,
-        cnfPassword: this.passwordDetails.value.confirmPassword
-      }
-      if(response.status === 200) {
-        this.apiService.generateSession(customerObj)
-        .subscribe(() => {
-          this.apiService.generateOtp(customerObj);
-        });
-        return true;
-      }
-      else {
-        return false;
-      }
-    }));
-
-    
+      .pipe(switchMap((response) => {
+          if(response.status === 200) {
+            return this.apiService.generateSession(customerObj)
+              .pipe(concatMap((data: Validate) => this.apiService.generateOtp(customerObj)));
+          }
+          else {
+            return of(false);
+          }
+      }));
 
   }
 

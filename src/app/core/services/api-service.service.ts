@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { Validate } from 'src/app/shared/validate.model';
 import { CustomerDetail } from 'src/app/shared/customer-detail.model';
@@ -61,7 +61,7 @@ export class ApiServiceService {
     }
     const generateSessionApiUrl = this.WRAPPER_API_URL + 'auth/v1/token/generate';
 
-    return this.http.post<Validate>(generateSessionApiUrl, JSON.stringify(generateSessionBody))
+    return this.http.post<Validate>(generateSessionApiUrl, generateSessionBody)
     .pipe(
       tap((data: Validate) => {
         localStorage.setItem('session-id', data.user.sessionId);
@@ -69,7 +69,7 @@ export class ApiServiceService {
     );
   }
 
-  generateOtp(customerDetails: Customer): void {
+  generateOtp(customerDetails: Customer): Observable<boolean> {
 
     const url = this.WRAPPER_API_URL + 'auth/v1/otp/generate';
 
@@ -80,7 +80,7 @@ export class ApiServiceService {
       identifierValue: customerDetails.mobileNumber,
       sessionId: localStorage.getItem('session-id')
     }
-    this.http.post(url, payload).subscribe();
+    return this.http.post(url, payload).pipe(map((data: Validate) => data.status.success));
 
   }
 
@@ -96,7 +96,7 @@ export class ApiServiceService {
 
     const generateSessionApiUrl = this.WRAPPER_API_URL + 'auth/v1/password/validate';
 
-    return this.http.post<Validate>(generateSessionApiUrl, JSON.stringify(generateSessionBody))
+    return this.http.post<Validate>(generateSessionApiUrl, generateSessionBody)
       .pipe(map((data: Validate) => {
           if (data.status.success) {
             return data.auth.token;

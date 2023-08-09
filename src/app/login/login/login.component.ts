@@ -1,11 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
+import { concatMap } from 'rxjs/operators';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { Customer } from 'src/app/shared/customer.model';
-import { Validate } from 'src/app/shared/validate.model';
 
 @Component({
   selector: 'app-login',

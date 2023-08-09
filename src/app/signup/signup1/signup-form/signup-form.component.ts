@@ -39,15 +39,15 @@ export class SignupFormComponent implements OnInit {
       password: '123456',
       cnfPassword: '123456'
     }
-    this.apiService.generateSession(customer)
-    .subscribe((data: Validate) => {
-      if(data.user.userRegisteredForPassword) {
-        this.router.navigate(['login']);
-      }
-      else {
-        this.router.navigate(['signup', 'registration']);
-      }
-    });
+    this.apiService.generateSession(customer).pipe()
+      .subscribe((data: Validate) => {
+        if(data.user.userRegisteredForPassword) {
+          this.router.navigate(['login']);
+        }
+        else {
+          this.router.navigate(['signup', 'registration']);
+        }
+      });
   }
 
   onClickLoginNow(): void {
