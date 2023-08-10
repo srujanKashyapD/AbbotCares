@@ -4,23 +4,18 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-top-navigation-bar',
   templateUrl: './top-navigation-bar.component.html',
-  styleUrls: ['./top-navigation-bar.component.css']
+  styleUrls: ['./top-navigation-bar.component.css'],
 })
 export class TopNavigationBarComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onClickLogo(): void {
     this.router.navigate(['login']);
-
   }
 
   onClickTitle(): void {
     this.onClickLogo();
-
   }
-
 }

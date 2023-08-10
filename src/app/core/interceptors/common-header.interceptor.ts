@@ -4,22 +4,23 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpHeaders
+  HttpHeaders,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class CommonHeaderInterceptor implements HttpInterceptor {
+  constructor() {}
 
-  constructor() { }
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
     const clonedReq = request.clone({
-      headers: request.headers.set(
-        "Content-Type", "application/json").set(
-          "Accept", "application/json, text/plain, */*")
+      headers: request.headers
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json, text/plain, */*'),
     });
-
 
     return next.handle(clonedReq);
   }

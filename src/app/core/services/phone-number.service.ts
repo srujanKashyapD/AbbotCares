@@ -3,31 +3,40 @@ import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 export interface PhoneGroup {
-    countryCode: string;
-    phoneNumber: string;
+  countryCode: string;
+  phoneNumber: string;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class PhoneNumberService {
-    phoneNumberGroup = new BehaviorSubject<PhoneGroup>(null);
-    private isPhoneValid = false;
+  phoneNumberGroup = new BehaviorSubject<PhoneGroup>(null);
+  private isPhoneValid = false;
 
-    constructor() { }
+  constructor() {}
 
-    isValidPhoneGroup(): boolean {
-        this.phoneNumberGroup.pipe(take(1)).subscribe((phoneGroup: PhoneGroup) => {
-            if (phoneGroup && phoneGroup.countryCode && phoneGroup.countryCode !== '' &&
-                phoneGroup.phoneNumber && phoneGroup.phoneNumber !== '') {
-                this.isPhoneValid = true;
-            }
+  isValidPhoneGroup(): boolean {
+    this.phoneNumberGroup
+      .pipe(take(1))
+      .subscribe(
+        (phoneGroup: PhoneGroup) => {
+          if (
+            phoneGroup &&
+            phoneGroup.countryCode &&
+            phoneGroup.countryCode !== '' &&
+            phoneGroup.phoneNumber &&
+            phoneGroup.phoneNumber !== ''
+          ) {
+            this.isPhoneValid = true;
+          }
         },
         (error) => {
-            console.error(error);
+          console.error(error);
         }
-        ).unsubscribe();
+      )
+      .unsubscribe();
 
-        return this.isPhoneValid;
-    }
+    return this.isPhoneValid;
+  }
 }

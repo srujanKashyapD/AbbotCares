@@ -1,44 +1,67 @@
 <app-carousel></app-carousel>
 
 <form [formGroup]="loginDetails" (ngSubmit)="onClickNext()">
-    <div class="signup-form">
-        <div class="form-heading-text">
-            <h2>Login </h2>
-            <span>Welcome Back!
-                Please enter your mobile number and password.</span>
-        </div>
-        <div class="phone-number-group" formGroupName="phoneDetails">
-            <input type="text" id="country-code" placeholder="+60" formControlName="countryCode">
-            <input type="number" id="ph-num" placeholder="Enter Phone Number (1XXXXXXXXX)" formControlName="phoneNumber">
-        </div>
-
-        <div class="f-input-field-container">
-            <!-- toggling input type from 'password' to 'text' using ternary operator -->
-            <input type="{{ showPassword ? 'text' : 'password' }}" class="f-input-field"
-                placeholder="Enter Your Password" formControlName="password">
-
-            <a (click)="togglePassword()" class="eye-b">
-                <img src="assets/images/eye.png" />
-            </a>
-        </div>
-
-        <div class="fs-checkbox-container">
-            <input type="checkbox" id="k-logged-in" name="logged-in" value="logged-in"
-                formControlName="keepLoggedInState">
-            <label class="fs-checkbox-text-label" for="k-logged-in">
-                Keep me logged in
-            </label>
-        </div>
-
-        <div class="g-recaptcha" data-sitekey="6LcKps8mAAAAALuMqHWQp7RI_Lv-eWLUaJpeceeW"></div>
-        <div class="next-button">
-            <button type="submit">Log In</button>
-        </div>
-        <div class="form-heading-text mt-2">
-            <a (click)="onClickForgotPassword()"><u>Forgot your password</u></a>
-        </div>
-        <div>
-            <p class="login-now-text">NEW USER? <a (click)="onClickSignUpNow()"><u>SIGN UP NOW</u> </a></p>
-        </div>
+  <div class="signup-form">
+    <div class="form-heading-text">
+      <h2>Login</h2>
+      <span>Welcome Back! Please enter your mobile number and password.</span>
     </div>
+    <div class="phone-number-group" formGroupName="phoneDetails">
+      <input
+        type="text"
+        id="country-code"
+        placeholder="+60"
+        formControlName="countryCode"
+      />
+      <input
+        type="number"
+        id="ph-num"
+        placeholder="Enter Phone Number (1XXXXXXXXX)"
+        formControlName="phoneNumber"
+      />
+    </div>
+
+    <div class="f-input-field-container">
+      <!-- toggling input type from 'password' to 'text' using ternary operator -->
+      <input
+        type="{{ showPassword ? 'text' : 'password' }}"
+        class="f-input-field"
+        placeholder="Enter Your Password"
+        formControlName="password"
+      />
+
+      <a (click)="togglePassword()" class="eye-b">
+        <img src="assets/images/eye.png" />
+      </a>
+    </div>
+
+    <div class="fs-checkbox-container">
+      <input
+        type="checkbox"
+        id="k-logged-in"
+        name="logged-in"
+        value="logged-in"
+        formControlName="keepLoggedInState"
+      />
+      <label class="fs-checkbox-text-label" for="k-logged-in">
+        Keep me logged in
+      </label>
+    </div>
+
+    <div
+      class="g-recaptcha"
+      data-sitekey="6LcKps8mAAAAALuMqHWQp7RI_Lv-eWLUaJpeceeW"
+    ></div>
+    <div class="next-button">
+      <button type="submit">Log In</button>
+    </div>
+    <div class="form-heading-text mt-2">
+      <a (click)="onClickForgotPassword()"><u>Forgot your password</u></a>
+    </div>
+    <div>
+      <p class="login-now-text">
+        NEW USER? <a (click)="onClickSignUpNow()"><u>SIGN UP NOW</u> </a>
+      </p>
+    </div>
+  </div>
 </form>
